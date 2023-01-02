@@ -1,6 +1,15 @@
 from typing import List
 from CityDataManagement.City import City
-from CityDataManagement.AbstractCityHeap import AbstractCityHeap, get_parent_index
+from CityDataManagement.AbstractCityHeap import AbstractCityHeap
+
+
+def get_parent_index(index):
+    """
+    Return the index of the parent node.
+    """
+    if index == 0:  # root node has no parent, return None
+        return None
+    return (index - 1) // 2
 
 
 class CityMaxHeap(AbstractCityHeap):
@@ -70,7 +79,8 @@ class CityMaxHeap(AbstractCityHeap):
 
         # If the value of the current element is greater than its parent, swap them
         if self.heapStorage[current_index] > self.heapStorage[parent_index]:
-            self.heapStorage[current_index], self.heapStorage[parent_index] = self.heapStorage[parent_index], self.heapStorage[current_index]
+            self.heapStorage[current_index], self.heapStorage[parent_index] = self.heapStorage[parent_index], \
+                self.heapStorage[current_index]
 
         # Move on to the next element
         current_index = parent_index
@@ -82,57 +92,53 @@ class CityMaxHeap(AbstractCityHeap):
 
         # Find the index of the largest element
         largest_index = index
-        if left_child_index < len(self.heapStorage) and self.heapStorage[left_child_index] > self.heapStorage[largest_index]:
+        if left_child_index < len(self.heapStorage) and self.heapStorage[left_child_index] > self.heapStorage[
+            largest_index]:
             largest_index = left_child_index
-        if right_child_index < len(self.heapStorage) and self.heapStorage[right_child_index] > self.heapStorage[largest_index]:
+        if right_child_index < len(self.heapStorage) and self.heapStorage[right_child_index] > self.heapStorage[
+            largest_index]:
             largest_index = right_child_index
 
         # If the largest element is not the current element, swap them and heapify down recursively
         if largest_index != index:
-            self.heapStorage[index], self.heapStorage[largest_index] = self.heapStorage[largest_index], self.heapStorage[index]
+            self.heapStorage[index], self.heapStorage[largest_index] = self.heapStorage[largest_index], \
+                self.heapStorage[index]
             self.heapify_down_recursive(largest_index)
 
     def remove(self):
-        # Find the city object in the heap using its name
-        city_index = -1
-        for i in range(len(self.heapStorage)):
-            if self.heapStorage[i].name == City:
-                city_index = i
+        if self.maximumHeapCapacity == 0:
+            return None
+
+        root = self.heapStorage[0]
+
+        # Replace the root element with the last element in the heap
+        self.heapStorage[0] = self.heapStorage[self.maximumHeapCapacity - 1]
+        self.maximumHeapCapacity -= 1
+
+        # Fix the heap by swapping the root element with its larger child until the
+        # heap property is restored
+        i = 0
+        while i < self.maximumHeapCapacity:
+            left_child_index = 2 * i + 1
+            right_child_index = 2 * i + 2
+
+            # Find the larger of the two children
+            larger_child_index = left_child_index
+            if (right_child_index < self.maximumHeapCapacity
+                    and self.heapStorage[right_child_index] > self.heapStorage[larger_child_index]):
+                larger_child_index = right_child_index
+
+            # If the root element is smaller than the larger child, swap them
+            if self.heapStorage[i] < self.heapStorage[larger_child_index]:
+                self.heapStorage[i], self.heapStorage[larger_child_index] = (
+                    self.heapStorage[larger_child_index],
+                    self.heapStorage[i],
+                )
+                i = larger_child_index
+            else:
                 break
 
-        # Remove the city object from the heap
-        if city_index != -1:
-            self.heapStorage[city_index] = self.heapStorage[-1]
-            self.heapStorage.pop()
+        return root
 
-            # Bubble down the remaining elements to restore the heap property
-            self.bubble_down(city_index)
-
-    def bubble_down(self, index):
-        # Get the left and right child indices
-        left_child_index = 2 * index + 1
-        right_child_index = 2 * index + 2
-
-        # If the left child index is within the bounds of the heap, compare the element at the index
-        # to its left child
-        if left_child_index < len(self.heapStorage):
-            # If the element is smaller than its left child, swap them and continue bubbling down
-            # from the left child's index
-            if self.heapStorage[index] < self.heapStorage[left_child_index]:
-                self.heapStorage[index], self.heapStorage[left_child_index] = self.heapStorage[left_child_index], \
-                self.heapStorage[index]
-                self.bubble_down(left_child_index)
-
-        # If the right child index is within the bounds of the heap, compare the element at the index
-        # to its right child
-        if right_child_index < len(self.heapStorage):
-            # If the element is smaller than its right child, swap them and continue bubbling down
-            # from the right child's index
-            if self.heapStorage[index] < self.heapStorage[right_child_index]:
-                self.heapStorage[index], self.heapStorage[right_child_index] = self.heapStorage[right_child_index], \
-                self.heapStorage[index]
-                self.bubble_down(right_child_index)
-
-        
 
 

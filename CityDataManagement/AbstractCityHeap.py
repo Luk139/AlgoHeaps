@@ -3,13 +3,6 @@ from typing import List
 from CityDataManagement.City import City
 
 
-def get_parent_index(index):
-    """
-    Return the index of the parent node.
-    """
-    if index == 0:  # root node has no parent, return None
-        return None
-    return (index - 1) // 2
 
 
 class AbstractCityHeap(ABC):
@@ -124,10 +117,11 @@ class AbstractCityHeap(ABC):
         self.heapStorage.append(city)
 
         # Call the heapify_up method to restore the heap property
-        self.heapify_up()
+        self.heapify_up_iterative()
+        #self.heapStorage.sort()
 
         if self.recursive:
-            self.heapify_up_recursive(self.currentHeapLastIndex - 1)
+           self.heapify_up_recursive(self.currentHeapLastIndex - 1)
         else:
             self.heapify_up_iterative()
 
@@ -155,6 +149,14 @@ class AbstractCityHeap(ABC):
         Return the index of the right child.
         """
         return 2 * index + 2
+
+    def get_parent_index(self):
+        """
+        Return the index of the parent node.
+        """
+        if self == 0:  # root node has no parent, return None
+            return None
+        return (self - 1) // 2
 
     def has_parent(self, index) -> bool:
         # If the index is 0, the element is the root and has no parent
@@ -234,19 +236,3 @@ class AbstractCityHeap(ABC):
         """
         return self.heapStorage
 
-    def heapify_up(self):
-        # Get the index of the new element
-        index = len(self.heapStorage) - 1
-
-        # Keep looping until the element is at the root or is larger than its parent
-        while index > 0:
-            # Get the index of the parent element
-            parent_index = (index - 1) // 2
-
-            # If the element is larger than its parent, swap them
-            if self.heapStorage[index] > self.heapStorage[parent_index]:
-                self.heapStorage[index], self.heapStorage[parent_index] = self.heapStorage[parent_index], \
-                    self.heapStorage[index]
-
-            # Update the index to the parent's index
-            index = parent_index
