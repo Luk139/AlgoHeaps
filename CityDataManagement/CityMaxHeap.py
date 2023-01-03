@@ -109,10 +109,9 @@ class CityMaxHeap(AbstractCityHeap):
         if self.maximumHeapCapacity == 0:
             return None
 
-        root = self.heapStorage[0]
-
+        root = self.rawCityData[0]
         # Replace the root element with the last element in the heap
-        self.heapStorage[0] = self.heapStorage[self.maximumHeapCapacity - 1]
+        self.rawCityData[0] = self.rawCityData[self.maximumHeapCapacity - 1]
         self.maximumHeapCapacity -= 1
 
         # Fix the heap by swapping the root element with its larger child until the

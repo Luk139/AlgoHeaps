@@ -3,8 +3,6 @@ from typing import List
 from CityDataManagement.City import City
 
 
-
-
 class AbstractCityHeap(ABC):
     """
     Abstract Class with the responsibility to offer the common methods of both a Min and Max heap.
@@ -118,10 +116,9 @@ class AbstractCityHeap(ABC):
 
         # Call the heapify_up method to restore the heap property
         self.heapify_up_iterative()
-        #self.heapStorage.sort()
 
         if self.recursive:
-           self.heapify_up_recursive(self.currentHeapLastIndex - 1)
+            self.heapify_up_recursive(self.currentHeapLastIndex - 1)
         else:
             self.heapify_up_iterative()
 
@@ -235,4 +232,3 @@ class AbstractCityHeap(ABC):
         List[City]:
         """
         return self.heapStorage
-

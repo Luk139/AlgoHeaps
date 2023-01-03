@@ -42,9 +42,9 @@ class CityDataManager(ICityDataManagerAccess):
             removed_city = self.cityMaxHeap.remove()
             if removed_city is not None:
                 print("City of "
-                      #+ removed_city.name
+                      + removed_city.name
                       + " with the highest population of "
-                      #+ str(removed_city.population)
+                      + str(removed_city.population)
                       + "has been removed.")
         else:
             print("No Data Available")
